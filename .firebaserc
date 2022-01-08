@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "prod": "tell-me-bot",
+    "stage": "tell-me-bot-stg"
+  }
+}
