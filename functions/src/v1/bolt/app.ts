@@ -34,7 +34,6 @@ useAddItemView(app);
 
 export const slack = functions.region(REGION).https.onRequest((req, res) => {
   // イベントのタイムアウトでの再送を防止
-  console.info("header", JSON.stringify(req.headers));
   if (req.headers["x-slack-retry-num"] || req.headers["X-Slack-Retry-Num"]) {
     res.send(JSON.stringify({ message: "No need to resend" }));
     return;

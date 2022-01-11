@@ -23,9 +23,12 @@ export const useAddItemView = (app: App) => {
           description,
         });
 
+        const metadata = JSON.parse(view.private_metadata);
+
         // 結果を投稿
         await client.chat.postMessage({
-          channel: view.private_metadata,
+          channel: metadata.channelId,
+          thread_ts: metadata.threadTs,
           blocks: addedItemBlock({ word, description }),
         });
       } catch (e) {
