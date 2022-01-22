@@ -5,6 +5,7 @@ import { useMentionEvent } from "./events/useMentionEvent";
 import { useSearchAction } from "./actions/useSearchAction";
 import { useShowAddItemModalAction } from "./actions/useShowAddItemModalAction";
 import { useAddItemView } from "./views/useAddItemView";
+import { useAppDirectMessageEvent } from "./events/useAppDirectMessageEvent";
 
 const config = functions.config();
 
@@ -26,6 +27,7 @@ app.error(async (e) => {
 
 // registered mention event
 useMentionEvent(app);
+useAppDirectMessageEvent(app);
 // registered search action
 useSearchAction(app);
 // show modal
