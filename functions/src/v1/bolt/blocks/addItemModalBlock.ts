@@ -1,6 +1,8 @@
 import { Block, KnownBlock } from "@slack/bolt";
 
-export const addItemModalBlock = (): (Block | KnownBlock)[] => {
+export const addItemModalBlock = (
+  searchWord: string
+): (Block | KnownBlock)[] => {
   return [
     {
       type: "section",
@@ -19,6 +21,7 @@ export const addItemModalBlock = (): (Block | KnownBlock)[] => {
       element: {
         type: "plain_text_input",
         action_id: "word_input",
+        initial_value: searchWord,
       },
     },
     {

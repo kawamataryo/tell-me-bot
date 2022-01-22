@@ -1,11 +1,13 @@
 import { App, BlockButtonAction } from "@slack/bolt";
 import { addItemModalBlock } from "../blocks/addItemModalBlock";
+import { errorBlock } from "../blocks/errorBlock";
 
 export const useShowAddItemModalAction = (app: App) => {
   app.action<BlockButtonAction>(
     "show_add_item_modal",
-    async ({ ack, client, body, action, logger }) => {
+    async ({ ack, client, body, logger, action }) => {
       await ack();
+      const channelId = body.channel!.id;
       // modalを表示
       try {
         // モーダルの表示
@@ -19,9 +21,9 @@ export const useShowAddItemModalAction = (app: App) => {
               type: "plain_text",
               text: "辞書に追加",
             },
-            blocks: addItemModalBlock(),
+            blocks: addItemModalBlock(action.value),
             private_metadata: JSON.stringify({
-              channelId: body.channel!.id,
+              channelId: channelId,
             }),
             submit: {
               type: "plain_text",
@@ -31,6 +33,10 @@ export const useShowAddItemModalAction = (app: App) => {
         });
       } catch (e) {
         logger.error(e);
+        await client.chat.postMessage({
+          channel: channelId,
+          blocks: errorBlock(),
+        });
       }
     }
   );

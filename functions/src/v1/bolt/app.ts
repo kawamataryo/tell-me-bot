@@ -6,6 +6,7 @@ import { useSearchAction } from "./actions/useSearchAction";
 import { useShowAddItemModalAction } from "./actions/useShowAddItemModalAction";
 import { useAddItemView } from "./views/useAddItemView";
 import { useAppDirectMessageEvent } from "./events/useAppDirectMessageEvent";
+import { useAskAction } from "./actions/useAskAction";
 
 const config = functions.config();
 
@@ -33,6 +34,10 @@ useSearchAction(app);
 // show modal
 useShowAddItemModalAction(app);
 useAddItemView(app);
+// ask action
+if (config.slack.ask_channel_id) {
+  useAskAction(app);
+}
 
 export const slack = functions.region(REGION).https.onRequest((req, res) => {
   // イベントのタイムアウトでの再送を防止

@@ -4,9 +4,44 @@ import { randomIcon } from "../../../lib/utils";
 
 const config = functions.config();
 
-export const searchResultBlock = (
-  searchResult: SearchResult
-): (Block | KnownBlock)[] => {
+const addAndAskElements = (searchWord: string, askChannelName: string) => {
+  const elements = [
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "用語を追加する",
+        emoji: true,
+      },
+      value: searchWord,
+      action_id: "show_add_item_modal",
+    },
+  ];
+  if (askChannelName) {
+    elements.push({
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: `#${askChannelName}で質問する`,
+        emoji: true,
+      },
+      value: searchWord,
+      action_id: "ask",
+    });
+  }
+  return elements;
+};
+
+type BlockArgs = {
+  searchResult: SearchResult;
+  searchWord: string;
+  askChannelName: string;
+};
+export const searchResultBlock = ({
+  searchResult,
+  searchWord = "",
+  askChannelName = "",
+}: BlockArgs): (Block | KnownBlock)[] => {
   const searchItems = searchResult.searchItems;
 
   // perfect match case
@@ -87,17 +122,7 @@ export const searchResultBlock = (
       },
       {
         type: "actions",
-        elements: [
-          {
-            type: "button",
-            text: {
-              type: "plain_text",
-              text: "用語を追加する",
-              emoji: true,
-            },
-            action_id: "show_add_item_modal",
-          },
-        ],
+        elements: addAndAskElements(searchWord, askChannelName),
       },
       {
         type: "context",
@@ -132,17 +157,7 @@ export const searchResultBlock = (
     },
     {
       type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "用語を追加する",
-            emoji: true,
-          },
-          action_id: "show_add_item_modal",
-        },
-      ],
+      elements: addAndAskElements(searchWord, askChannelName),
     },
     {
       type: "context",
