@@ -7,7 +7,8 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy:prod": "firebase deploy --only functions --project=prod",
+    "deploy": "firebase deploy --only functions",
+    "deploy:prd": "firebase deploy --only functions --project=prod",
     "deploy:stg": "firebase deploy --only functions --project=stage",
     "logs": "firebase functions:log",
     "test": "ts-jest"
