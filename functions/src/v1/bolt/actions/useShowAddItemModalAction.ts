@@ -8,12 +8,6 @@ export const useShowAddItemModalAction = (app: App) => {
       await ack();
       // modalを表示
       try {
-        // 結果をスレッドで返したいためスレッドの情報を取得する
-        const conversations = await client.conversations.replies({
-          channel: body.channel!.id,
-          ts: body.message!.ts,
-        });
-
         // モーダルの表示
         await client.views.open({
           trigger_id: body.trigger_id,
@@ -28,7 +22,6 @@ export const useShowAddItemModalAction = (app: App) => {
             blocks: addItemModalBlock(),
             private_metadata: JSON.stringify({
               channelId: body.channel!.id,
-              threadTs: conversations.messages![0].thread_ts,
             }),
             submit: {
               type: "plain_text",

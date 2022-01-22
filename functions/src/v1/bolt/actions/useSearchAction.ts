@@ -17,15 +17,8 @@ export const useSearchAction = (app: App) => {
         const searchItems = await spreadsheetClient.getValues(config.sheet.id);
         const searchResult = search(searchItems, action.value);
 
-        // スレッドで返したいためスレッドの情報を取得する
-        const conversations = await client.conversations.replies({
-          channel: body.channel!.id,
-          ts: body.message!.ts,
-        });
-
         await client.chat.postMessage({
           channel: body.channel!.id,
-          thread_ts: conversations.messages![0].thread_ts,
           blocks: searchResultBlock(searchResult),
         });
       } catch (e) {

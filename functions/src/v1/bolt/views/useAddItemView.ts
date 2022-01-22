@@ -28,7 +28,6 @@ export const useAddItemView = (app: App) => {
         // 結果を投稿
         await client.chat.postMessage({
           channel: metadata.channelId,
-          thread_ts: metadata.threadTs,
           blocks: addedItemBlock({ word, description }),
         });
       } catch (e) {
