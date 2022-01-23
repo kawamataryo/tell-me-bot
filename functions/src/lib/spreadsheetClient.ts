@@ -16,10 +16,12 @@ export class SpreadsheetClient {
       spreadsheetId: sheetId,
       range,
     });
-    return res.data.values!.map((value: string[]) => ({
-      word: value[0] as string,
-      description: value[1] as string,
-    }));
+    return (
+      res.data.values?.map((value: string[]) => ({
+        word: value[0] as string,
+        description: value[1] as string,
+      })) || []
+    );
   }
 
   async setValues(sheetId: string, values: SearchItem) {
@@ -40,6 +42,6 @@ export class SpreadsheetClient {
       spreadsheetId: sheetId,
       range: "A2:B",
     });
-    return res.data.values!.length;
+    return res.data.values?.length || 0;
   }
 }
