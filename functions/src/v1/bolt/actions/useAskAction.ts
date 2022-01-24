@@ -18,7 +18,10 @@ export const useAskAction = (app: App) => {
           blocks: askBlock(action.value),
         });
 
-        const askChannelName = await fetchChannelName(client, channelId);
+        const askChannelName = await fetchChannelName(
+          client,
+          config.slack.ask_channel_id
+        );
         await client.chat.postMessage({
           channel: channelId,
           blocks: askCompleteBlock(action.value, askChannelName),
