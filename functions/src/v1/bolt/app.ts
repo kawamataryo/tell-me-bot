@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { App, ExpressReceiver } from "@slack/bolt";
+import { App, ExpressReceiver, LogLevel } from "@slack/bolt";
 import { REGION } from "../../lib/constants";
 import { useMentionEvent } from "./events/useMentionEvent";
 import { useSearchAction } from "./actions/useSearchAction";
@@ -7,6 +7,7 @@ import { useShowAddItemModalAction } from "./actions/useShowAddItemModalAction";
 import { useAddItemView } from "./views/useAddItemView";
 import { useAppDirectMessageEvent } from "./events/useAppDirectMessageEvent";
 import { useAskAction } from "./actions/useAskAction";
+import { error, info, warn } from "firebase-functions/lib/logger";
 
 const config = functions.config();
 
@@ -20,10 +21,27 @@ const app = new App({
   receiver: expressReceiver,
   token: config.slack.bot_token,
   processBeforeResponse: true,
+  logger: {
+    error(...msg) {
+      error(msg);
+    },
+    debug(...msg) {
+      info(msg);
+    },
+    info(...msg) {
+      info(msg);
+    },
+    warn(...msg) {
+      warn(msg);
+    },
+    setLevel: (level) => ({}),
+    getLevel: () => LogLevel.DEBUG,
+    setName: (name) => ({}),
+  },
 });
 
 app.error(async (e) => {
-  console.error(e);
+  error(e);
 });
 
 // registered mention event
