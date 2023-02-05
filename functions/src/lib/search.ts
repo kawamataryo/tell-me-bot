@@ -3,7 +3,7 @@ import { FUSE_THRESHOLD } from "./constants";
 
 export const search = (
   searchItems: SearchItem[],
-  targetWord: string
+  targetWord = ""
 ): SearchResult => {
   // perfect match
   const matchItems = searchItems.filter(
