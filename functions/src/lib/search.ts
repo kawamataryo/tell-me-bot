@@ -1,5 +1,5 @@
 import Fuse from "fuse.js";
-import { FUSE_THRESHOLD } from "./constants";
+import { FUSE_OPTIONS } from "./constants";
 
 export const search = (
   searchItems: SearchItem[],
@@ -17,10 +17,7 @@ export const search = (
   }
 
   // fuzzy match
-  const fuse = new Fuse(searchItems, {
-    threshold: FUSE_THRESHOLD,
-    keys: ["word", "description"],
-  });
+  const fuse = new Fuse(searchItems, FUSE_OPTIONS);
   const result = fuse.search(targetWord);
   return {
     isExactMatch: false,

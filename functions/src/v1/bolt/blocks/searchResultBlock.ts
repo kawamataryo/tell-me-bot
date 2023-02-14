@@ -98,7 +98,7 @@ export const searchResultBlock = ({
       {
         type: "actions",
         elements: [
-          ...searchItems.slice(0, 4).map((item, i) => ({
+          ...searchItems.slice(0, 6).map((item, i) => ({
             type: "button",
             text: {
               type: "plain_text",
