@@ -5,14 +5,15 @@ import { randomIcon } from "../../../lib/utils";
 const config = functions.config();
 
 export const addedItemBlock = (
-  searchItem: SearchItem
+  userId: string,
+  searchItem: SearchItem,
 ): (Block | KnownBlock)[] => {
   return [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "新しい用語を登録したよ！",
+        text: `<@${userId}> が新しい用語を登録してくれたよ〜！`,
       },
     },
     {

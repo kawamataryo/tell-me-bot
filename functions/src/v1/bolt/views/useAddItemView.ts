@@ -9,7 +9,7 @@ const config = functions.config();
 export const useAddItemView = (app: App) => {
   app.view<ViewSubmitAction>(
     "add_item_view",
-    async ({ ack, view, logger, client }) => {
+    async ({ ack, view, logger, client, body }) => {
       await ack();
       try {
         const word = view.state.values.word.word_input.value as string;
@@ -28,7 +28,7 @@ export const useAddItemView = (app: App) => {
         // 結果を投稿
         await client.chat.postMessage({
           channel: metadata.channelId,
-          blocks: addedItemBlock({ word, description }),
+          blocks: addedItemBlock(body.user.id, { word, description }),
         });
       } catch (e) {
         logger.error(e);
