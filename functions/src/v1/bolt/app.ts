@@ -8,6 +8,7 @@ import { useAddItemView } from "./views/useAddItemView";
 import { useAppDirectMessageEvent } from "./events/useAppDirectMessageEvent";
 import { useAskAction } from "./actions/useAskAction";
 import { error, info, warn } from "firebase-functions/lib/logger";
+import { useReplyEvent } from "./events/useReplyEvent";
 
 const config = functions.config();
 
@@ -55,6 +56,10 @@ useAddItemView(app);
 // ask action
 if (config.slack.ask_channel_id) {
   useAskAction(app);
+}
+// OpenAI GPT reply
+if (config.openai.key) {
+  useReplyEvent(app)
 }
 
 export const slack = functions.region(REGION).https.onRequest((req, res) => {
