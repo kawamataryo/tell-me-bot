@@ -63,20 +63,23 @@ export const useReplyEvent = (app: App) => {
         ? messages!.slice(1, -1)
         : messages!.slice(-6, -1);
     const prevMessageText =
-      prevMessages.map((m) => `- ${m.text}`).join("\n") || "";
+      prevMessages.map((m, i) => {
+        m.bot_id ? `${i+1}. you: ${m.text}` : `${i+1}. I: ${m.text}`
+        return `${i+1}. ${m.text}`
+      }).join("\n") || ""
 
 
       // 回答メッセージの作成 with OpenAI
       const prompt = `
-あなたは優秀なSlackBotです。あなたの知識とこれまでの会話の内容を考慮した上で、今の質問に正確な回答をしてください。
+You are an excellent AI. Please answer the current question based on your knowledge and our previous conversations.
 
-### これまでの会話:
+# Previous conversations:
 ${prevMessageText}
 
-### 今の質問:
+# Current question:
 ${text}
 
-### 今の質問の回答:
+# Answer:
 `;
       const configuration = new Configuration({
         apiKey: config.openai.key,
@@ -86,8 +89,8 @@ ${text}
         model: "text-davinci-003",
         prompt: prompt,
         max_tokens: 1000,
-        top_p: 0.5,
-        frequency_penalty: 1,
+        temperature: 0.7,
+        top_p: 0.9,
       });
       const message = completions.data.choices[0].text;
 

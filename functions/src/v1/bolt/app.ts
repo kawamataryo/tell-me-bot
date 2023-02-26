@@ -9,6 +9,7 @@ import { useAppDirectMessageEvent } from "./events/useAppDirectMessageEvent";
 import { useAskAction } from "./actions/useAskAction";
 import { error, info, warn } from "firebase-functions/lib/logger";
 import { useReplyEvent } from "./events/useReplyEvent";
+import { registerActionOrEvents } from "../../lib/registerActionOrEvents";
 
 const config = functions.config();
 
@@ -45,22 +46,15 @@ app.error(async (e) => {
   error(e);
 });
 
-// registered mention event
-useMentionEvent(app);
-useAppDirectMessageEvent(app);
-// registered search action
-useSearchAction(app);
-// show modal
-useShowAddItemModalAction(app);
-useAddItemView(app);
-// ask action
-if (config.slack.ask_channel_id) {
-  useAskAction(app);
-}
-// OpenAI GPT reply
-if (config.openai.key) {
-  useReplyEvent(app)
-}
+registerActionOrEvents(app, [
+  [useMentionEvent, true],
+  [useAppDirectMessageEvent, true],
+  [useSearchAction, true],
+  [useShowAddItemModalAction, true],
+  [useAddItemView, true],
+  [useAskAction, !!config.slack.ask_channel_id],
+  [useReplyEvent, !!config.openai.key],
+])
 
 export const slack = functions.region(REGION).https.onRequest((req, res) => {
   // イベントのタイムアウトでの再送を防止

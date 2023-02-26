@@ -28,6 +28,7 @@ export const askBlock = (targetWord: string): (Block | KnownBlock)[] => {
             emoji: true,
           },
           action_id: "show_add_item_modal",
+          value: targetWord,
         },
       ],
     },

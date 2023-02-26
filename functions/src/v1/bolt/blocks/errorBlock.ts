@@ -6,7 +6,7 @@ export const errorBlock = (): (Block | KnownBlock)[] => {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "ごめーん..なんかエラーっぽい..。 Slack管理者に確認してね",
+        text: "ごめーん..なんかエラーっぽい",
       },
     },
     {

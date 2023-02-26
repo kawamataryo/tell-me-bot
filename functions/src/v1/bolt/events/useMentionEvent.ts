@@ -19,7 +19,7 @@ export const useMentionEvent = (app: App) => {
         channel: event.channel,
         text: `おっけー！${GPT_BOT_NAME}を呼ぶね！`,
       });
-      await new Promise((resolve) => setTimeout(resolve, 4000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       await client.chat.postMessage({
         channel: event.channel,
         icon_emoji: ":robot_face:",
