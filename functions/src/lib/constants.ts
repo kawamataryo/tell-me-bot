@@ -16,3 +16,8 @@ export const FUSE_OPTIONS = {
       }
     ],
 }
+
+
+export const GPT_BOT_NAME = "Paccho GPT";
+
+export const CHAT_START_MESSAGES = ["chatしたい", "チャットしたい", "ちゃっとしたい", "話したい", "chat", "ちゃっと", "チャット"]

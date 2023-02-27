@@ -13,7 +13,7 @@ import { errorBlock } from "../blocks/errorBlock";
 
 const config = functions.config();
 export const useAppDirectMessageEvent = (app: App) => {
-  app.event("message", async ({ event, logger, client }) => {
+  app.event("message", async ({ event, logger, client, say }) => {
     try {
       if (event.channel_type === "im") {
         const text = (event as any).text;
@@ -36,6 +36,7 @@ export const useAppDirectMessageEvent = (app: App) => {
             askChannelName,
           }),
         });
+        return
       }
     } catch (e) {
       logger.error(e);
