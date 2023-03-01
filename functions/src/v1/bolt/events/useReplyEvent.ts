@@ -1,7 +1,7 @@
 import { App } from "@slack/bolt";
-import { Configuration, OpenAIApi } from "openai";
+import { ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from "openai";
 import * as functions from "firebase-functions";
-import { GPT_BOT_NAME } from "../../../lib/constants";
+import { CHAT_GPT_SYSTEM_PROMPT, GPT_BOT_NAME } from "../../../lib/constants";
 
 const config = functions.config();
 
@@ -49,7 +49,7 @@ export const useReplyEvent = (app: App) => {
     }
 
     try {
-      // Slackのレスポンス制約を回避するために、仮のメッセージを投稿する
+      // OpenAIのレスポンスは時間がかかる場合が多いので、仮のメッセージを投稿する
       const thinkingMessageResponse = await postAsGptBot({
         client,
         channel: event.channel,
@@ -57,42 +57,29 @@ export const useReplyEvent = (app: App) => {
         text: "...",
       });
 
-    // 会話の履歴を取得して結合。最大6件まで
-    const prevMessages =
-      messages!.length < 6
-        ? messages!.slice(1, -1)
-        : messages!.slice(-6, -1);
-    const prevMessageText =
-      prevMessages.map((m, i) => {
-        m.bot_id ? `${i+1}. you: ${m.text}` : `${i+1}. I: ${m.text}`
-        return `${i+1}. ${m.text}`
-      }).join("\n") || ""
+      // tokenの制限を回避するため、最初のメッセージを除いた最大12件のメッセージで区切る
+      const prevMessages =
+        messages!.slice(1).slice(-12).map(m => {
+          const role = m.bot_id ? ChatCompletionRequestMessageRoleEnum.Assistant : ChatCompletionRequestMessageRoleEnum.User
+          return {role: role, content: m.text as string}
+        })
 
-
-      // 回答メッセージの作成 with OpenAI
-      const prompt = `
-You are an excellent AI. Please answer the current question based on your knowledge and our previous conversations.
-
-# Previous conversations:
-${prevMessageText}
-
-# Current question:
-${text}
-
-# Answer:
-`;
       const configuration = new Configuration({
         apiKey: config.openai.key,
       });
       const openAIClient = new OpenAIApi(configuration);
-      const completions = await openAIClient.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 1000,
-        temperature: 0.7,
-        top_p: 0.9,
-      });
-      const message = completions.data.choices[0].text;
+
+      const response = await openAIClient.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {role: ChatCompletionRequestMessageRoleEnum.System, content: CHAT_GPT_SYSTEM_PROMPT},
+          ...prevMessages,
+          {role: ChatCompletionRequestMessageRoleEnum.User, content: text as string}
+        ],
+        top_p: 0.5,
+        frequency_penalty: 0.5,
+      })
+      const message = response.data.choices[0].message?.content || "";
 
       // 仮のメッセージを削除する
       await client.chat.delete({
