@@ -14,7 +14,7 @@ export const useMentionEvent = (app: App) => {
     const searchWord = extractMessageFromText(event.text);
 
     // OpenAIのAPIキーが設定されていてかつ指定のメッセージが含まれている場合は、GPT Botを呼ぶ
-    if(config.openai.key && CHAT_START_MESSAGES.includes(searchWord) ) {
+    if(config.openai?.key && CHAT_START_MESSAGES.includes(searchWord) ) {
       await client.chat.postMessage({
         channel: event.channel,
         text: `おっけー！${GPT_BOT_NAME}を呼ぶね！`,
