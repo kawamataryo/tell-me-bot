@@ -53,7 +53,7 @@ registerActionOrEvents(app, [
   [useShowAddItemModalAction, true],
   [useAddItemView, true],
   [useAskAction, !!config.slack.ask_channel_id],
-  [useReplyEvent, !!config.openai.key],
+  [useReplyEvent, !!config.openai?.key],
 ])
 
 export const slack = functions.region(REGION).https.onRequest((req, res) => {
